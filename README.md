@@ -66,6 +66,9 @@ Once the MFCCs have been acquired, we can now use them to find the codebook for 
 ![codebook2](https://github.com/user-attachments/assets/08e63803-441f-4457-ac89-19cb9f0e5c92)
 ![codebook8](https://github.com/user-attachments/assets/531ea079-5f5d-4cbb-aa3e-fd2b91c986b6)
 
+Shown here is a plot of some vectors and generated codewords.
+![mfccclustercheck_test5](https://github.com/user-attachments/assets/62e8de1f-6479-4286-9c26-6acc862a8841)
+
 ### Key MATLAB Functions
 * `imptruncplot.m`:
 * `stft_periodograms.m`:
@@ -79,6 +82,6 @@ Our initial results with the first testing and training data was 1/8 (12.5%). In
 
 
 # Conclusion
-
+Through this project, we learned how to implement certain digital signal processing concepts and techniques in MATLAB to create a speaker recognition algorithm. One thing we could improve on in the future is creating a more efficient way to implement the algorithm with different folders of datasets.
 
 [^1]: Haytham Fayek, ["Speech Processing for Machine Learning: Filter banks, Mel-Frequency Cepstral Coefficients (MFCCs) and What's In-Between"](https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html#fn:1)
