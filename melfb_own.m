@@ -1,4 +1,5 @@
 function mfcc = melfb_own(filename, num_ceps, cep_lifter, nfilt, NFFT)
+
     % Function to compute MFCCs from a WAV file and plot results
     % Inputs:
     %   - filename: Name of the WAV file
@@ -46,8 +47,8 @@ function mfcc = melfb_own(filename, num_ceps, cep_lifter, nfilt, NFFT)
     filter_banks = 20 * log10(filter_banks);
 
     % 6️ MFCC Calculation
-    mfcc = dct(filter_banks, [], 2);
-    mfcc = mfcc(:, 2:num_ceps + 1); % Exclude first coefficient
+    mfcc = dct(filter_banks);
+    mfcc = mfcc(2:num_ceps + 1,:); % Exclude first coefficient
     mfcc = mfcc * sqrt(2 / size(filter_banks, 2)); % Normalization
 
     % 7️ Cepstral Liftering
@@ -61,41 +62,44 @@ function mfcc = melfb_own(filename, num_ceps, cep_lifter, nfilt, NFFT)
     mfcc = mfcc - (mean_mfcc + 1e-8);
     disp('MFCC computation complete.');
 
-    %% plots
+    % Create a single figure for all plots stacked vertically
+figure;
 
-    % 1. Time-Domain Signal (Speech Waveform)
-    t = (0:length(audio)-1) / fs; % Time vector in seconds
-    figure;
-    plot(t, audio);
-    xlabel('Time (seconds)');
-    ylabel('Amplitude');
-    title(['Speech Signal: ', filename]);
-    grid on;
+% 1. Time-Domain Signal (Speech Waveform)
+subplot(4,1,1);
+t = (0:length(audio)-1) / fs; % Time vector in seconds
+plot(t, audio);
+xlabel('Time (seconds)');
+ylabel('Amplitude');
+title(['Speech Signal: ', strrep(filename, '_', ' ')], 'Interpreter', 'none');
+grid on;
 
-    % 2. Mel Filter Bank (Amplitude vs Frequency)
-    figure;
-    hz_scale = linspace(0, fs/2, size(fbank, 2)); % Convert FFT bins to Hz
-    plot(hz_scale, fbank'); % Plot each filter
-    xlabel('Frequency (Hz)');
-    ylabel('Amplitude');
-    title('Mel Filter Bank Responses');
-    grid on;
+% 2. Mel Filter Bank (Amplitude vs Frequency)
+subplot(4,1,2);
+hz_scale = linspace(0, fs/2, size(fbank, 2)); % Convert FFT bins to Hz
+plot(hz_scale, fbank'); % Plot each filter
+xlabel('Frequency (Hz)');
+ylabel('Amplitude');
+title('Mel Filter Bank Responses');
+grid on;
 
-    % 3. Mel Spectrogram (Log Mel Filtered Spectrogram)
-    figure;
-    imagesc(filter_banks);
-    colorbar;
-    xlabel('Frame Index');
-    ylabel('Mel Filter Index');
-    title('Mel Spectrogram (Log Mel-Filtered Energy)');
+% 3. Mel Spectrogram (Log Mel Filtered Spectrogram)
+subplot(4,1,3);
+imagesc(filter_banks);
+colorbar;
+xlabel('Frame Index');
+ylabel('Mel Filter Index');
+title('Mel Spectrogram (Log Mel-Filtered Energy)');
 
-    % 4. MFCC Features Heatmap
-    figure;
-    imagesc(mfcc');
-    colorbar;
-    xlabel('Frame Index');
-    ylabel('MFCC Coefficients');
-    title('MFCC Features');
+% 4. MFCC Features Heatmap
+subplot(4,1,4);
+imagesc(mfcc');
+colorbar;
+xlabel('Frame Index');
+ylabel('MFCC Coefficients');
+title('MFCC Features');
 
+% Add a main title for the entire figure
+sgtitle('Speech Signal Analysis');
 
 end
