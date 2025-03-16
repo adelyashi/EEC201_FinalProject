@@ -21,13 +21,16 @@ The file `imptruncplot.m` imports each speech sample from a given folder (in thi
 $$E_{threshold} = 0.01 \times \text{STE}_{\text{max}} = 0.01 \times \max_{k}\left( \sum_{j = 1}^{\text{len\_frame}}k_j^2 \right)$$
 ```
 
-After truncating, each signal was normalized to a maximum amplitude of 1 and plotted in the time domain. The results of this are shown below.
-[insert time-domain plots of signals here]
+After truncating, each signal was normalized to a maximum amplitude of 1 and plotted in the time domain. The results of this are shown below.\
+![timedomsigs](https://github.com/user-attachments/assets/535f100d-ee1b-47d7-90b1-f6c47abcc010)
 
 ### Periodograms
 
 To visualize the estimated spectral density of each signal and find where the most energy lies, we used the Short-Time Fourier Transform to plot periodograms for each signal using varying window lengths. The results are shown below using window lengths of $N = 128, 256,$ and $512$, respectively.\
-% insert periodograms for each N value and comment on effect of each window length
+![periodogram128](https://github.com/user-attachments/assets/f1f3374b-e30f-4b29-8049-8657c13d7666)
+![periodogram256](https://github.com/user-attachments/assets/5f0bdfbc-6648-4c8f-a02d-cf4b7d78eea1)
+![periodogram512](https://github.com/user-attachments/assets/ab4f040a-b12b-453c-9f80-13b1d2c006be)
+While the general shape of the periodograms remains relatively consistent for each signal, the measured intensity of each frequency appears to lessen as window length increases. We chose to use a windowing length of 256 for the remainder of the project as a compromise between time and frequency precision.
 
 ### Signal preprocessing: calculating MFCCs
 
@@ -53,6 +56,7 @@ After the MFCCs have been calculated, we filtered them in the cepstrum domain to
 
 
 ## Feature Matching using LBG-VQ Algorithm
+Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm[^2] to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold.
 
 # Test Results and Discussion
 
@@ -65,3 +69,4 @@ Final Results: Had 8/8 correct.
 
 
 [^1]: Haytham Fayek, ["Speech Processing for Machine Learning: Filter banks, Mel-Frequency Cepstral Coefficients (MFCCs) and What's In-Between"](https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html#fn:1)
+[^2]: Buzo et al., [citation]
