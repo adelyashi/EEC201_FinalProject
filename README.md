@@ -56,6 +56,11 @@ After the MFCCs have been calculated, we filtered them in the cepstrum domain to
 
 # Test Results and Discussion
 
+
+Results 1 : Had 1/8 correct. Soln: Removing the Liftering portion form melfb_own 
+Results 2 : Had 7/8 correct. Soln: Increasing number of centroids from 16 to 64.
+Final Results: Had 8/8 correct.
+
 # Conclusion
 
 
