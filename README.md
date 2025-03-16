@@ -50,7 +50,7 @@ After taking the 512-point DFT of each windowed frame, we found the power spectr
 ```math
 P_{fr} = \frac{1}{512} \left( \sum_{i=0}^{N}|x_i|^2 \right)
 ```
-where $x_i$ is the $i$th value of a frame of length $N$. These power spectra are then enveloped by a Mel filter bank generated with the help of a given function `melfb.m` so as to accommodate the human perception of sound frequency, which is important in creating a speech recognition algorithm. 
+where $x_i$ is the $i$ th value of a frame of length $N$. These power spectra are then enveloped by a Mel filter bank generated with the help of a given function `melfb.m`. The Mel filter bank applies a triangular filter to group frequencies which simulates human auditory perception. This does so by compressing higher frequencies and retaining the lower frequencies in higher detail. The transformation makes MFCCs more robust by focusing on only the important features.
 
 #### Using DCT to calculate MFCCs
 Lastly, we applied the Discrete Cosine Transform onto the aforementioned filter banks to get the MFCCs. We excluded the first coefficient because the first coefficient of the DCT defines overall energy, not spectral shape.
@@ -61,25 +61,21 @@ The results of this block of code are shown below for training samples 2 and 8.
 ![mfcctrain2](https://github.com/user-attachments/assets/f3e1343e-0d95-43c3-9907-beb808fa59c3)
 ![mfcctrain8](https://github.com/user-attachments/assets/72184917-8ec6-4163-8781-b2fdbb194b0d)
 
-## Feature Matching using LBG-VQ Algorithm
+### Feature Matching using LBG-VQ Algorithm
 Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold. Plots of 2 dimensions of the codewords of training samples 2 and 8 are shown below.
 ![codebook2](https://github.com/user-attachments/assets/08e63803-441f-4457-ac89-19cb9f0e5c92)
 ![codebook8](https://github.com/user-attachments/assets/531ea079-5f5d-4cbb-aa3e-fd2b91c986b6)
 
-## Key MATLAB Functions
+### Key MATLAB Functions
+* `imptruncplot.m`:
+* `stft_periodograms.m`:
+* 
 
-
-# Test Results and Discussion
+## Test Results and Discussion
 
 In Test 1, we created a human benchmark to compare the results of the speech recognition algorithm against. We played each sound file in order and were able to successfully identify each speaker. Similarly, when played out of order we were able to correctly identify the speaker with a 100% success rate. 
 
-### Testing Data 1 (Original testing data)
-| Trial # | # of correct results | Change implemented |
-| --- | --- | --- |
-| 1 | 1/8 | Removed the Liftering portion from `melfb_own`. |
-| 2 | 7/8 | Increased `num_centroids` from 16 to 64 for more accuracy. |
-| 3 | 8/8 | No change needed. |
-
+Our initial results with the first testing and training data was 1/8 (12.5%). In order to improve upon this, we removed the liftering section on the melfb_own function originally implemented to emphasize or de-emphasize certain cepstral coefficients. Removing this portion got our success rate up to 7/8 (87%). To further improve the accuracy, increasing the number of centroids used in the LGB algorithm function from 16 to 64 allowed us to get a success rate of 8/8 (100%). When testing the system with the files of students saying “zero,” our success dropped to 16/19 (84%). Using a larger sampling group decreased the accuracy of the system. Changing the number of centroids in this case further decreased the accuracy. 
 
 
 # Conclusion
