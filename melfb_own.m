@@ -52,10 +52,10 @@ function mfcc = melfb_own(filename, num_ceps, cep_lifter, nfilt, NFFT)
     mfcc = mfcc * sqrt(2 / size(filter_banks, 2)); % Normalization
 
     % 7️ Cepstral Liftering
-    [nframes, ncoeff] = size(mfcc);
-    n = (0:ncoeff-1);
-    lift = 1 + (cep_lifter / 2) * sin(pi * n / cep_lifter);
-    mfcc = mfcc .* lift;
+    % [nframes, ncoeff] = size(mfcc);
+    % n = (0:ncoeff-1);
+    % lift = 1 + (cep_lifter / 2) * sin(pi * n / cep_lifter);
+    % mfcc = mfcc .* lift;
 
     % 8️ Mean Normalization
     mean_mfcc = mean(mfcc, 1);
