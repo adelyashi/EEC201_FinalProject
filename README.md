@@ -38,35 +38,51 @@ Our approach in calculating the Mel-frequency cepstrum coefficients of each sign
 
 #### Pre-emphasis filter
 A first-order pre-emphasis filter is applied to the signal to emphasize higher frequencies, which typically have smaller amplitudes. The equation for this is as shown below:
-$$y[n] = x[n] - 0.97x[n-1]$$
+```math
+y[n] = x[n] - 0.97x[n-1]
+```
 
 #### Framing and windowing
-In framing each signal, we decided to use a typical frame length of 25 ms and a frame stride (overlap) of 10 ms, resulting in a frame step of 15 ms. 
+In framing each signal, we decided to use a typical frame length of 25 ms and a frame stride (overlap) of 10 ms, resulting in a frame step of 15 ms. We then applied a Hamming window to each frame to emphasize the middle samples.
 
-#### 512-point DFT and power spectrum
-
-#### Filter banks
+#### 512-point DFT, power spectrum, and filter banks
+After taking the 512-point DFT of each windowed frame, we found the power spectrum of each frame using
+```math
+P_{fr} = \frac{1}{512} \left( \sum_{i=0}^{N}|x_i|^2 \right)
+```
+where $x_i$ is the $i$th value of a frame of length $N$. These power spectra are then enveloped by a Mel filter bank generated with the help of a given function `melfb.m` so as to accommodate the human perception of sound frequency, which is important in creating a speech recognition algorithm. 
 
 #### Using DCT to calculate MFCCs
+Lastly, we applied the Discrete Cosine Transform onto the aforementioned filter banks to get the MFCCs. We excluded the first coefficient because the first coefficient of the DCT defines overall energy, not spectral shape.
 
 #### MFCC cleanup: liftering and normalization
-After the MFCCs have been calculated, we filtered them in the cepstrum domain to emphasize the middle coefficients and reduce processing time because these higher coefficients do not significantly affect human perception of sound. Lastly, to best visualize the MFCCs, we applied mean normalization.
-\par The results of the code \texttt{melfb\_own.m} are shown below.
-% embed image here
-
+After the MFCCs have been calculated, we filtered them in the cepstrum domain to emphasize the middle coefficients and reduce processing time, and to emphasize higher-order coefficients. Lastly, to best visualize the MFCCs, we applied mean normalization.\
+The results of this block of code are shown below for training samples 2 and 8.
+![mfcctrain2](https://github.com/user-attachments/assets/f3e1343e-0d95-43c3-9907-beb808fa59c3)
+![mfcctrain8](https://github.com/user-attachments/assets/72184917-8ec6-4163-8781-b2fdbb194b0d)
 
 ## Feature Matching using LBG-VQ Algorithm
-Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm[^2] to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold.
+Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold. Plots of 2 dimensions of the codewords of training samples 2 and 8 are shown below.
+![codebook2](https://github.com/user-attachments/assets/08e63803-441f-4457-ac89-19cb9f0e5c92)
+![codebook8](https://github.com/user-attachments/assets/531ea079-5f5d-4cbb-aa3e-fd2b91c986b6)
+
+## Key MATLAB Functions
+
 
 # Test Results and Discussion
 
+In Test 1, we created a human benchmark to compare the results of the speech recognition algorithm against. We played each sound file in order and were able to successfully identify each speaker. Similarly, when played out of order we were able to correctly identify the speaker with a 100% success rate. 
 
-Results 1 : Had 1/8 correct. Soln: Removing the Liftering portion form melfb_own 
-Results 2 : Had 7/8 correct. Soln: Increasing number of centroids from 16 to 64.
-Final Results: Had 8/8 correct.
+### Testing Data 1 (Original testing data)
+| Trial # | # of correct results | Change implemented |
+| --- | --- | --- |
+| 1 | 1/8 | Removed the Liftering portion from `melfb_own`. |
+| 2 | 7/8 | Increased `num_centroids` from 16 to 64 for more accuracy. |
+| 3 | 8/8 | No change needed. |
+
+
 
 # Conclusion
 
 
 [^1]: Haytham Fayek, ["Speech Processing for Machine Learning: Filter banks, Mel-Frequency Cepstral Coefficients (MFCCs) and What's In-Between"](https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html#fn:1)
-[^2]: Buzo et al., [citation]
