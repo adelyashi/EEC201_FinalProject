@@ -22,14 +22,15 @@ $$E_{threshold} = 0.01 \times \text{STE}_{\text{max}} = 0.01 \times \max_{k}\lef
 ```
 
 After truncating, each signal was normalized to a maximum amplitude of 1 and plotted in the time domain. The results of this are shown below.\
-![timedomsigs](https://github.com/user-attachments/assets/535f100d-ee1b-47d7-90b1-f6c47abcc010)
+<img src="https://github.com/user-attachments/assets/535f100d-ee1b-47d7-90b1-f6c47abcc010" width="500">
 
 ### Periodograms
 
 To visualize the estimated spectral density of each signal and find where the most energy lies, we used the Short-Time Fourier Transform to plot periodograms for each signal using varying window lengths. The results are shown below using window lengths of $N = 128, 256,$ and $512$, respectively.\
-![periodogram128](https://github.com/user-attachments/assets/f1f3374b-e30f-4b29-8049-8657c13d7666)
-![periodogram256](https://github.com/user-attachments/assets/5f0bdfbc-6648-4c8f-a02d-cf4b7d78eea1)
-![periodogram512](https://github.com/user-attachments/assets/ab4f040a-b12b-453c-9f80-13b1d2c006be)
+<img src="https://github.com/user-attachments/assets/f1f3374b-e30f-4b29-8049-8657c13d7666" width="325">
+<img src="https://github.com/user-attachments/assets/5f0bdfbc-6648-4c8f-a02d-cf4b7d78eea1" width="325">
+<img src="https://github.com/user-attachments/assets/ab4f040a-b12b-453c-9f80-13b1d2c006be" width="325">
+
 While the general shape of the periodograms remains relatively consistent for each signal, the measured intensity of each frequency appears to lessen as window length increases. We chose to use a windowing length of 256 for the remainder of the project as a compromise between time and frequency precision.
 
 ### Signal preprocessing: calculating MFCCs
@@ -58,16 +59,16 @@ Lastly, we applied the Discrete Cosine Transform onto the aforementioned filter 
 #### MFCC cleanup: liftering and normalization
 After the MFCCs have been calculated, we filtered them in the cepstrum domain to emphasize the middle coefficients and reduce processing time, and to emphasize higher-order coefficients. Lastly, to best visualize the MFCCs, we applied mean normalization.\
 The results of this block of code are shown below for training samples 2 and 8.
-![mfcctrain2](https://github.com/user-attachments/assets/f3e1343e-0d95-43c3-9907-beb808fa59c3)
-![mfcctrain8](https://github.com/user-attachments/assets/72184917-8ec6-4163-8781-b2fdbb194b0d)
+<img src="https://github.com/user-attachments/assets/f3e1343e-0d95-43c3-9907-beb808fa59c3" width="500">
+<img src="https://github.com/user-attachments/assets/72184917-8ec6-4163-8781-b2fdbb194b0d" width="500">
 
 ### Feature Matching using LBG-VQ Algorithm
-Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold. Plots of 2 dimensions of the codewords of training samples 2 and 8 are shown below.
-![codebook2](https://github.com/user-attachments/assets/08e63803-441f-4457-ac89-19cb9f0e5c92)
-![codebook8](https://github.com/user-attachments/assets/531ea079-5f5d-4cbb-aa3e-fd2b91c986b6)
+Once the MFCCs have been acquired, we can now use them to find the codebook for each unique voice using the Linde-Buzo-Gray algorithm to implement vector quantization to find the centroids of each MFCC array, as seen in the function `vq_lgb.m`. To find the optimal centroids for each MFCC array, we begin with a single centroid that is the average of every coefficient, then split it into two points that are an infinitesimally small distance apart. Then, using `disteu.m`, a provided function that calculates the Euclidean distance between two input vectors, we assign each coefficient to its nearest centroid. Once all coefficients have been assigned a nearest centroid, new centroid values are calculated by taking the mean of all coefficients assigned to a particular previous centroid. This process continues until the average distortion, or distance between a coefficient and its nearest centroid, meets a certain threshold. Plots of 2 dimensions of the codewords of training samples 2 and 8 are shown below.\
+<img src="https://github.com/user-attachments/assets/08e63803-441f-4457-ac89-19cb9f0e5c92" width="400">
+<img src="https://github.com/user-attachments/assets/531ea079-5f5d-4cbb-aa3e-fd2b91c986b6" width="400">
 
-Shown here is a plot of some vectors and generated codewords.
-![mfccclustercheck_test5](https://github.com/user-attachments/assets/62e8de1f-6479-4286-9c26-6acc862a8841)
+Shown here is a plot of some vectors and generated codewords.\
+<img src="https://github.com/user-attachments/assets/62e8de1f-6479-4286-9c26-6acc862a8841" width="400">
 
 ### Key MATLAB Functions
 * `imptruncplot.m`:
@@ -78,8 +79,23 @@ Shown here is a plot of some vectors and generated codewords.
 
 In Test 1, we created a human benchmark to compare the results of the speech recognition algorithm against. We played each sound file in order and were able to successfully identify each speaker. Similarly, when played out of order we were able to correctly identify the speaker with a 100% success rate. 
 
-Our initial results with the first testing and training data was 1/8 (12.5%). In order to improve upon this, we removed the liftering section on the melfb_own function originally implemented to emphasize or de-emphasize certain cepstral coefficients. Removing this portion got our success rate up to 7/8 (87%). To further improve the accuracy, increasing the number of centroids used in the LGB algorithm function from 16 to 64 allowed us to get a success rate of 8/8 (100%). When testing the system with the files of students saying “zero,” our success dropped to 16/19 (84%). Using a larger sampling group decreased the accuracy of the system. Changing the number of centroids in this case further decreased the accuracy. 
+### Speaker recognition accuracy results
+Our initial results with the first testing and training data was 1/8 (12.5%). In order to improve upon this, we removed the liftering section on the melfb_own function originally implemented to emphasize or de-emphasize certain cepstral coefficients. Removing this portion got our success rate up to 7/8 (87%). To further improve the accuracy, increasing the number of centroids used in the LGB algorithm function from 16 to 64 allowed us to get a success rate of 8/8 (100%). 
 
+When testing the system with the files of the 2024 students saying “zero,” our success dropped to 16/19 (84%). Using a larger sampling group decreased the accuracy of the system. Changing the number of centroids in this case further decreased the accuracy. The same results occurred when testing the system with the files of the 2024 students saying "twelve"; no amount of tweaking any parameters brought our success rate any higher. 
+
+When testing the system with the 2025 student audio files, we were eventually able to achieve a 100% success rate for both the "eleven" and "five" data. We achieved a 100% success rate for the "eleven" set on the first try using the same parameters from our previous test, including a truncation threshold of 4%. However, with the "five" data, with the same truncation threshold, our initial accuracy was 18/23 (78.2%). Below is a table of trials and adjustments.
+| Trial # | Accuracy | Adjustment |
+| --- | --- | --- |
+| 1 | 18/23 | `thresh` 4% $\rightarrow$ 3% |
+| 2 | 20/23 | `num_centroids` 32 $\rightarrow$ 40 |
+| 3 | 19/23 | `num_centroids` 40 $\rightarrow$ 24 |
+| 4 | 20/23 | `thresh` 3% $\rightarrow$ 2% |
+| 5 | 21/23 | `thresh` 2% $\rightarrow$ 1% |
+| 6 | 22/23 | `num_centroids` 24 $\rightarrow$ 32 |
+| 7 | 22/23 | - |
+
+It was at this point that we realized that changing `num_centroids` had little to no positive effect on the outcome, so we settled for adjusting `thresh` accordingly. After several more trials, we achieved 100% accuracy with this dataset by using a truncation threshold of 0.8%.
 
 # Conclusion
 Through this project, we learned how to implement certain digital signal processing concepts and techniques in MATLAB to create a speaker recognition algorithm. One thing we could improve on in the future is creating a more efficient way to implement the algorithm with different folders of datasets.
