@@ -71,9 +71,12 @@ Shown here is a plot of some vectors and generated codewords.\
 <img src="https://github.com/user-attachments/assets/62e8de1f-6479-4286-9c26-6acc862a8841" width="400">
 
 ### Key MATLAB Functions
-* `imptruncplot.m`:
-* `stft_periodograms.m`:
-* 
+* `imptruncplot.m`: Imports audio files from a folder, truncates the silence, and plots all audios in the time domain
+* `melfb_own.m`: Generates the Mel-frequency cepstral coefficients for an audio file
+* `vq_lgb.m`: Uses vector quantization to generate the codebook for an audio file using its MFCCs
+* Given functions
+  * `disteu.m`: Calculate Euclidean distance between two vectors
+  * `melfb.m`: Calculate triangular mel filters
 
 ## Test Results and Discussion
 
@@ -98,6 +101,6 @@ When testing the system with the 2025 student audio files, we were eventually ab
 It was at this point that we realized that changing `num_centroids` had little to no positive effect on the outcome, so we settled for adjusting `thresh` accordingly. After several more trials, we achieved 100% accuracy with this dataset by using a truncation threshold of 0.8%.
 
 # Conclusion
-Through this project, we learned how to implement certain digital signal processing concepts and techniques in MATLAB to create a speaker recognition algorithm. One thing we could improve on in the future is creating a more efficient way to implement the algorithm with different folders of datasets.
+Through this project, we learned how to implement certain digital signal processing concepts and techniques in MATLAB to create a speaker recognition algorithm. If we were to repeat this project in the future, one thing we could improve on is having a more diverse dataset with more speakers and a large variety of phonemes per speaker; this way, the codebook would be more accurate to each person's voice as a whole rather than a specific word.
 
 [^1]: Haytham Fayek, ["Speech Processing for Machine Learning: Filter banks, Mel-Frequency Cepstral Coefficients (MFCCs) and What's In-Between"](https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html#fn:1)
