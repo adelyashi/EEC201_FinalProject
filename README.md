@@ -103,4 +103,6 @@ It was at this point that we realized that changing `num_centroids` had little t
 # Conclusion
 Through this project, we learned how to implement certain digital signal processing concepts and techniques in MATLAB to create a speaker recognition algorithm. If we were to repeat this project in the future, one thing we could improve on is having a more diverse dataset with more speakers and a large variety of phonemes per speaker; this way, the codebook would be more accurate to each person's voice as a whole rather than a specific word.
 
+Project video link [Google Drive]: [Part 1 (Mandy)](https://drive.google.com/file/d/1s85odP-mFQ83ZqKsORTYaemP_35k3Qp6/view?usp=sharing)
+
 [^1]: Haytham Fayek, ["Speech Processing for Machine Learning: Filter banks, Mel-Frequency Cepstral Coefficients (MFCCs) and What's In-Between"](https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html#fn:1)
